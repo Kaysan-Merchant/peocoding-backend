@@ -21,3 +21,10 @@ def get_example():
     This endpoint returns a JSON object consisting of a simple message.
     """
     return {"message": "Hello World!", "year":2025}
+
+@app.get("/example2")  
+def get_example2(name):    # can also pass in parameters
+    """
+    This endpoint takes in a parameter called "name"  
+    """ # The frontend will communicate with the backend with the name parameter to present a name
+    return {"message": f"Hello {name}!"} # Remember to indent the return
