@@ -20,4 +20,4 @@ def get_example():
     """
     This endpoint returns a JSON object consisting of a simple message.
     """
-    return {"message": "Hello World!"}
+    return {"message": "Hello World!", "year":2025}
