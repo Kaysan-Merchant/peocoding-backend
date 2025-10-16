@@ -1,10 +1,21 @@
 #Importing FastAPI
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+# CORS (Cross-Origin Resource Sharing) allows us to restrict/enable which client urls are allowed to send requests to this backend code.
 
 # Initialize the FastAPI application
 app = FastAPI(
     title="FastAPI Example",
     description="This is an example of using FastAPI"
+)
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # star means all client urls allowed 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Define endpoints or routes(PATH)
@@ -28,3 +39,4 @@ def get_example2(name):    # can also pass in parameters
     This endpoint takes in a parameter called "name"  
     """ # The frontend will communicate with the backend with the name parameter to present a name
     return {"message": f"Hello {name}!"} # Remember to indent the return
+    # f before the quotation enables the embedding of a variable inside the string
