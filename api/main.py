@@ -1,8 +1,29 @@
 #Importing FastAPI
-from fastapi import FastAPI
+from fastapi import FastAPI,Body
 from fastapi.middleware.cors import CORSMiddleware
 # CORS (Cross-Origin Resource Sharing) allows us to restrict/enable which client urls are allowed to send requests to this backend code.
-import random
+import psycopg2
+from psycopg2.extra import RealDictCursor
+# Database library that allows Python to speak with postgres
+
+import os 
+# to access the DATABASE_URL from Vercel
+
+# Database connection
+conn = psycopg2.connect( os.environ.get("DATABSE_URL") ) # Add database to project beforehand
+cur = conn.cursor()
+
+# Table created with SQL(the statement inside the """)
+# IF NOT EXISTS is necessary so that it will not create the items table over4 and over
+cur.execute("""
+CREATE TABLE IF NOT EXISTS items (
+    item_id SERIAL PRIMARY KEY,
+    item_name TEXT NOT NULL,
+    item_desc TEXT NOT NULL
+)
+""")
+conn.commit()
+# To make the change occur(Table being created), allows for rollbacks
 
 # Initialize the FastAPI application
 app = FastAPI(
@@ -19,12 +40,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-data = [
-        {"name": "Alice", "age": 30, "city": "New York"},
-        {"name": "Bob", "age": 24, "city": "London"},
-        {"name": "Charlie", "age": 35, "city": "Paris"},
-    ]
-
 # Define endpoints or routes(PATH)
 @app.get('/') # a "/" on its own is the root directory
 def default_route():
@@ -33,9 +48,21 @@ def default_route():
     """
     return "You have reached the default route. Back-end server is listening..."
 
-@app.get("/list")  
-def get_list():    
+@app.get("/items")
+def select_all_item_records():
     """
-    This endpoint returns a list of JSON objects.
+    GET all records from database table
     """
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("Select * FROM items") # Selects all records from the table
+    data = cur.fetchall()
     return data
+
+@app.post("/item")
+def insert_new_item_record(new_item_name = Body(...), new_item_desc = Body(...),): # Taking variables from front end
+    """
+    POST a record to database table
+    """
+    cur.execute("INSET INTO items (item_name,item_desc) VALUES (%s,%s)", (new_item_name, new_item_desc))
+    conn.commit()
+    return {"success":True, "message": "new record added"}
