@@ -10,7 +10,7 @@ import os
 # to access the DATABASE_URL from Vercel
 
 # Database connection
-conn = psycopg2.connect( os.environ.get("DATABSE_URL") ) # Add database to project beforehand
+conn = psycopg2.connect( os.environ.get("DATABASE_URL") ) # must add database to project beforehand
 cur = conn.cursor()
 
 # Table created with SQL(the statement inside the """)
