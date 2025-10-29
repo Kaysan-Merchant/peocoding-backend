@@ -3,7 +3,7 @@ from fastapi import FastAPI,Body
 from fastapi.middleware.cors import CORSMiddleware
 # CORS (Cross-Origin Resource Sharing) allows us to restrict/enable which client urls are allowed to send requests to this backend code.
 import psycopg2
-from psycopg2.extra import RealDictCursor
+from psycopg2.extras import RealDictCursor
 # Database library that allows Python to speak with postgres
 
 import os 
