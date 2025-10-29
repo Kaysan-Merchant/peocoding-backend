@@ -53,16 +53,16 @@ def select_all_item_records():
     """
     GET all records from database table
     """
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("Select * FROM items") # Selects all records from the table
+    cur = conn.cursor(cursor_factory=RealDictCursor)  # return result as JSON
+    cur.execute("SELECT * FROM items")
     data = cur.fetchall()
-    return data
+    return data    
 
 @app.post("/item")
-def insert_new_item_record(new_item_name = Body(...), new_item_desc = Body(...),): # Taking variables from front end
+def insert_new_item_record(new_item_name = Body(...), new_item_desc = Body(...),):    
     """
     POST a record to database table
     """
-    cur.execute("INSERT INTO items (item_name,item_desc) VALUES (%s,%s)", (new_item_name, new_item_desc))
+    cur.execute("INSERT INTO items (item_name,item_desc) VALUES (%s,%s)", (new_item_name, new_item_desc) ) 
     conn.commit()
     return {"success":True, "message": "new record added"}
